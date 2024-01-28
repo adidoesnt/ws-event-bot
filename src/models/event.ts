@@ -16,6 +16,7 @@ export const Event = neode.model("Event", {
         relationship: "ATTENDED_BY",
         direction: "in",
         target: "User",
+        cascade: "detach",
         properties: {},
     },
 });

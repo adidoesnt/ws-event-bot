@@ -11,4 +11,12 @@ export const User = neode.model("User", {
         type: "string",
         required: true,
     },
+    attendedBy: {
+        type: "relationship",
+        relationship: "ATTENDED_BY",
+        direction: "out",
+        target: "Event",
+        cascade: "detach",
+        properties: {},
+    },
 });
