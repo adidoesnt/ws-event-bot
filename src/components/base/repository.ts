@@ -51,7 +51,7 @@ export abstract class Respository<T extends Model<unknown>> {
         }
     }
 
-    async updateOne(id: number, data: Record<string, unknown>) {
+    async update(id: number, data: Record<string, unknown>) {
         try {
             const node = await this.findOne(id);
             return await node?.update(data);
