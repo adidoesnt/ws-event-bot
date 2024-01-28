@@ -1,4 +1,5 @@
 # ws-event-bot
+A bot for managing events in your WhatsApp chat group.
 
 To install dependencies:
 ```bash
