@@ -4,9 +4,9 @@ import { User } from "models/user";
 export class UserRepository extends Respository<typeof User> {
     readonly model = User;
     
-    async findOne(name: string) {
+    async findOne(id: string) {
         try {
-            return await this.model.find(name);
+            return await this.model.find(id);
         } catch (error) {
             this.logger.error("error finding one model", error);
             throw error;

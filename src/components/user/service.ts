@@ -13,9 +13,9 @@ export class UserService extends Service<typeof User>{
         }
     }
 
-    async update(name: string, data: Record<string, unknown>) {
+    async update(id: string, data: Record<string, unknown>) {
         try {
-            return await this.repository.update(name, data);
+            return await this.repository.update(id, data);
         } catch (error) {
             throw error;
         }
