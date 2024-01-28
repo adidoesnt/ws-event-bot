@@ -1,18 +1,21 @@
 {
-    "name": "ws-event-bot",
-    "module": "src/index.ts",
-    "type": "module",
-    "scripts": {
-        "start": "bun run src/index.ts",
-        "dev": "bun run --hot src/index.ts"
-    },
-    "devDependencies": {
-        "bun-types": "latest"
-    },
-    "peerDependencies": {
-        "typescript": "^5.0.0"
-    },
-    "dependencies": {
-        "log4js": "^6.9.1"
-    }
+  "name": "ws-event-bot",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "dev": "bun run --hot src/index.ts"
+  },
+  "devDependencies": {
+    "@types/qrcode-terminal": "^0.12.2",
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "log4js": "^6.9.1",
+    "puppeteer": "^21.9.0",
+    "qrcode-terminal": "^0.12.0"
+  }
 }
