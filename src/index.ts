@@ -1,1 +1,4 @@
-console.log("Hello via Bun!");
+import { Bot } from "components";
+
+const bot = new Bot();
+await bot.initialize();
