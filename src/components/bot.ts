@@ -4,8 +4,9 @@ import { EventService } from "./event/service";
 import { Message } from "whatsapp-web.js";
 import { Event as EventModel } from "models";
 import { Node } from "neode";
+import { parseDate } from "chrono-node";
 
-const { BOT_CHAT_ID } = process.env;
+const { BOT_CHAT_ID, TIMEZONE, FORMAT } = process.env;
 
 type EventProps = keyof (typeof EventModel)["properties"];
 
@@ -14,6 +15,8 @@ export class Bot extends WhatsApp {
     private chatId: string;
     private userService: UserService;
     private eventService: EventService;
+    private format: string = FORMAT ?? "DD-MM-YYYY";
+    private timezone: string = TIMEZONE ?? "GMT+8";
 
     private constructor() {
         super();
@@ -52,7 +55,7 @@ export class Bot extends WhatsApp {
             notifyName,
         } = msg as Message & { notifyName: string };
         if (!this.validateChatId(chatId)) return;
-        this.logger.info("received whatsapp message", msg);
+        this.logger.debug("received whatsapp message", msg);
         const tokens = body.split(" ");
         const command = tokens.shift();
         const msgId = id._serialized;
@@ -88,6 +91,7 @@ export class Bot extends WhatsApp {
                 break;
         }
         if (reply.trim() !== "") {
+            this.logger.info("sending reply", reply);
             return await this.client.sendMessage(this.chatId, reply, {
                 quotedMessageId: msgId,
             });
@@ -96,15 +100,22 @@ export class Bot extends WhatsApp {
         }
     }
 
+    private getDate(date: string) {
+        const year = new Date().getFullYear();
+        return parseDate(`${date} ${year} ${this.format} ${this.timezone}`);
+    }
+
     private async addEvent(tokens: string[]) {
-        const [name, date, time] = tokens;
+        const name = tokens.shift();
+        const date = tokens.join(" ");
         if (!name || !date) {
-            return "Event name and date are required\nExample: /addEvent <name> <date> <time>";
+            return "Event name and date are required\nExample: /addEvent <name> <date and time in natural language>";
         }
+        const parsedDate = this.getDate(date);
         const event = await this.eventService.create({
             name,
-            date,
-            time,
+            date: parsedDate?.getDate(),
+            time: parsedDate?.getTime(),
         });
         const { properties } = event;
         const { name: eventName } = properties as EventProps;
@@ -162,12 +173,43 @@ export class Bot extends WhatsApp {
             return `${name} ${date} ${time}`;
         } else {
             const events = await this.eventService.findAll();
+            const eventArr: Node<unknown>[] = [];
             let reply = "";
-            events.forEach((event: Node<unknown>, index: number) => {
-                const { properties } = event;
-                const { name, date, time } = properties as EventProps;
-                reply += `${index + 1}. ${name} ${date} ${time}\n`;
+            events.forEach((event: Node<unknown>) => {
+                eventArr.push(event);
             });
+            eventArr
+                .sort((a: any, b: any) => {
+                    this.logger.debug("sorting events", a, b);
+                    const aProps = a._properties as Map<string, unknown>;
+                    const bProps = b._properties as Map<string, unknown>;
+                    const aDate = aProps.get("date") as Date;
+                    const bDate = bProps.get("date") as Date;
+                    const aTime = aProps.get("time") as Date;
+                    const bTime = bProps.get("time") as Date;
+                    const dateComparison = aDate
+                        .toISOString()
+                        .localeCompare(bDate.toISOString());
+                    if (dateComparison !== 0) {
+                        return dateComparison;
+                    }
+                    if (aTime && bTime) {
+                        return aTime
+                            .toISOString()
+                            .localeCompare(bTime.toISOString());
+                    }
+                    return 0;
+                })
+                .forEach((event: any, index: number) => {
+                    const properties = event._properties as Map<
+                        string,
+                        unknown
+                    >;
+                    const name = properties.get("name");
+                    const date = properties.get("date");
+                    const time = properties.get("time");
+                    reply += `${index + 1}. ${name} ${date} ${time}\n`;
+                });
             return reply;
         }
     }

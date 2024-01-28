@@ -1,10 +1,13 @@
 import { neode } from "components/database";
+import { v4 as uuidV4 } from "uuid";
 
 export const Event = neode.model("Event", {
     id: {
-        type: "number",
+        type: "string",
         primary: true,
         required: true,
+        unique: true,
+        default: () => uuidV4(),
     },
     name: {
         type: "string",
