@@ -14,7 +14,7 @@ export abstract class Respository<T extends Model<unknown>> {
         }
     }
 
-    async findOne(id: number) {
+    async findOne(id: number | string) {
         try {
             return await this.model.find(id);
         } catch (error) {
@@ -51,7 +51,7 @@ export abstract class Respository<T extends Model<unknown>> {
         }
     }
 
-    async update(id: number, data: Record<string, unknown>) {
+    async update(id: number | string, data: Record<string, unknown>) {
         try {
             const node = await this.findOne(id);
             return await node?.update(data);

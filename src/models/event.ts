@@ -11,6 +11,14 @@ export const Event = neode.model("Event", {
         type: "string",
         required: true,
     },
+    date: {
+        type: "date",
+        required: true,
+    },
+    time: {
+        type: "time",
+        required: false,
+    },
     attendedBy: {
         type: "relationship",
         relationship: "ATTENDED_BY",

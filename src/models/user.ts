@@ -2,12 +2,8 @@ import { database } from "components/database";
 const { neode } = database;
 
 export const User = neode.model("User", {
-    id: {
-        type: "number",
-        primary: true,
-        required: true,
-    },
     name: {
+        primary: true,
         type: "string",
         required: true,
     },

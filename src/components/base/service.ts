@@ -12,7 +12,7 @@ export abstract class Service<T extends Model<unknown>> {
         }
     }
 
-    async findOne(id: number) {
+    async findOne(id: number | string) {
         try {
             return await this.repository.findOne(id);
         } catch (error) {
@@ -44,7 +44,7 @@ export abstract class Service<T extends Model<unknown>> {
         }
     }
 
-    async update(id: number, data: Record<string, unknown>) {
+    async update(id: number | string, data: Record<string, unknown>) {
         try {
             return await this.repository.update(id, data);
         } catch (error) {
