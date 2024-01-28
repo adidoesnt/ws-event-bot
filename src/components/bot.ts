@@ -44,7 +44,13 @@ export class Bot extends WhatsApp {
     }
 
     protected async processMessage(msg: Message) {
-        const { from: chatId, body, id, author } = msg;
+        const {
+            from: chatId,
+            body,
+            id,
+            author,
+            notifyName,
+        } = msg as Message & { notifyName: string };
         if (!this.validateChatId(chatId)) return;
         this.logger.info("received whatsapp message", msg);
         const tokens = body.split(" ");
@@ -54,7 +60,7 @@ export class Bot extends WhatsApp {
             this.logger.error("command is required");
             return;
         }
-        await this.processCommand(command, tokens, msgId, author);
+        await this.processCommand(command, tokens, msgId, author, notifyName);
     }
 
     private async processCommand(
@@ -62,6 +68,7 @@ export class Bot extends WhatsApp {
         tokens: string[],
         msgId: string,
         author?: string,
+        notifyName?: string,
     ) {
         let reply: string = "";
         switch (command) {
@@ -69,7 +76,7 @@ export class Bot extends WhatsApp {
                 reply = await this.addEvent(tokens);
                 break;
             case "/attendEvent":
-                reply = await this.attendEvent(tokens, author);
+                reply = await this.attendEvent(tokens, author, notifyName);
                 break;
             case "/deleteEvent":
                 reply = await this.deleteEvent(tokens);
@@ -104,9 +111,13 @@ export class Bot extends WhatsApp {
         return `Event ${eventName} created`;
     }
 
-    private async attendEvent(tokens: string[], author: string | undefined) {
-        if (!author) {
-            this.logger.error("author is required");
+    private async attendEvent(
+        tokens: string[],
+        author: string | undefined,
+        notifyName: string | undefined,
+    ) {
+        if (!author || !notifyName) {
+            this.logger.error("author and notify name are required");
             return "";
         } else {
             const [id] = tokens;
@@ -116,7 +127,8 @@ export class Bot extends WhatsApp {
             let user = await this.userService.findOne(author);
             if (!user) {
                 user = await this.userService.create({
-                    name: author,
+                    id: author,
+                    name: notifyName,
                 });
             }
             const event = await this.eventService.findOne(parseInt(id) - 1);
