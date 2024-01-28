@@ -1,4 +1,4 @@
 import { Bot } from "components";
 
-const bot = new Bot();
+const bot = Bot.getInstance();
 await bot.initialize();
