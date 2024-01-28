@@ -1,4 +1,4 @@
-import { Client } from "whatsapp-web.js";
+import { Client, Message } from "whatsapp-web.js";
 import { Logger } from "./logger";
 import puppeteer from "puppeteer";
 import qrcode from "qrcode-terminal";
@@ -29,7 +29,7 @@ export class WhatsApp {
             this.logger.info("whatsapp client was disconnected", reason);
         });
         this.client.on("message", async (msg) => {
-            await this.processMessage(msg.body);
+            await this.processMessage(msg);
         });
     }
 
@@ -39,7 +39,7 @@ export class WhatsApp {
         await this.client.initialize();
     }
 
-    protected async processMessage(msg: string) {
+    protected async processMessage(msg: Message) {
         this.logger.info("received whatsapp message", msg);
     }
 }

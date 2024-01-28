@@ -1,6 +1,7 @@
 import { UserService } from "components/user/service";
 import { WhatsApp } from "./whatsapp";
 import { EventService } from "./event/service";
+import { Message } from "whatsapp-web.js";
 
 export class Bot extends WhatsApp {
     private static instance: Bot;
@@ -20,7 +21,7 @@ export class Bot extends WhatsApp {
         return Bot.instance;
     }
 
-    protected async processMessage(msg: string) {
+    protected async processMessage(msg: Message) {
         this.logger.info("received whatsapp message in subclass", msg);
     }
 }
