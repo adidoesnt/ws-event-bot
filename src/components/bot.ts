@@ -62,7 +62,7 @@ export class Bot extends WhatsApp {
         command: string,
         tokens: string[],
         msgId: string,
-        author?: string
+        author?: string,
     ) {
         let reply: string = "";
         switch (command) {
@@ -82,7 +82,7 @@ export class Bot extends WhatsApp {
                 reply = "Unknown command";
                 break;
         }
-        if(reply.trim() !== "") {
+        if (reply.trim() !== "") {
             return await this.client.sendMessage(this.chatId, reply, {
                 quotedMessageId: msgId,
             });
@@ -107,7 +107,7 @@ export class Bot extends WhatsApp {
     }
 
     private async attendEvent(tokens: string[], author: string | undefined) {
-        if(!author) {
+        if (!author) {
             this.logger.error("author is required");
             return "";
         } else {
@@ -116,13 +116,16 @@ export class Bot extends WhatsApp {
                 return "Event ID is required\nExample: /attendEvent <id>";
             }
             let user = await this.userService.findOne(author);
-            if(!user) {
+            if (!user) {
                 user = await this.userService.create({
                     name: author,
                 });
             }
-            const event = await this.eventService.findOne(parseInt(id));
-            await event?.relateTo(user, "attendedBy");
+            const event = await this.eventService.findOne(parseInt(id) - 1);
+            if (!event) {
+                return `Event with ID ${id} not found`;
+            }
+            await event.relateTo(user, "attendedBy");
             const { properties: eventProps } = event;
             const { properties: userProps } = user;
             const { name: eventName } = eventProps as EventProps;
@@ -136,7 +139,7 @@ export class Bot extends WhatsApp {
         if (!id) {
             return "Event ID is required\nExample: /deleteEvent <id>";
         }
-        const event = await this.eventService.deleteOne(parseInt(id));
+        const event = await this.eventService.deleteOne(parseInt(id) - 1);
         const { properties } = event;
         const { name } = properties as EventProps;
         return `Event ${name} created`;
@@ -145,7 +148,7 @@ export class Bot extends WhatsApp {
     private async viewEvent(tokens: string[]) {
         const [id] = tokens;
         if (id) {
-            const event = await this.eventService.findOne(parseInt(id));
+            const event = await this.eventService.findOne(parseInt(id) - 1);
             const { properties } = event;
             const { name, date, time } = properties as EventProps;
             return `${name} ${date} ${time}`;
