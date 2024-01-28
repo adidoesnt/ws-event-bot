@@ -1,5 +1,4 @@
-import { database } from "components/database";
-const { neode } = database;
+import { neode } from "components/database";
 
 export const Event = neode.model("Event", {
     id: {

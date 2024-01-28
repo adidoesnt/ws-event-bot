@@ -2,13 +2,12 @@ import { UserService } from "components/user/service";
 import { WhatsApp } from "./whatsapp";
 import { EventService } from "./event/service";
 import { Message } from "whatsapp-web.js";
-import { Event as EventModel, User as UserModel } from "models";
+import { Event as EventModel } from "models";
 import { Node } from "neode";
 
 const { BOT_CHAT_ID } = process.env;
 
 type EventProps = keyof (typeof EventModel)["properties"];
-type UserProps = keyof (typeof UserModel)["properties"];
 
 export class Bot extends WhatsApp {
     private static instance: Bot;
@@ -79,7 +78,6 @@ export class Bot extends WhatsApp {
                 reply = await this.viewEvent(tokens);
                 break;
             default:
-                reply = "Unknown command";
                 break;
         }
         if (reply.trim() !== "") {
@@ -127,10 +125,8 @@ export class Bot extends WhatsApp {
             }
             await event.relateTo(user, "attendedBy");
             const { properties: eventProps } = event;
-            const { properties: userProps } = user;
             const { name: eventName } = eventProps as EventProps;
-            const { name: userName } = userProps as UserProps;
-            return `${userName} will be attending ${eventName}`;
+            return `You will be attending ${eventName}`;
         }
     }
 
