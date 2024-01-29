@@ -27,8 +27,7 @@ export class AddEvent extends Handler {
         const event = await eventService.create({
             name: name as NodeProperty,
             date: parsedDate as unknown as NodeProperty,
-            attendedBy: undefined,
-        });
+        } as any);
         const eventName = event.get("name");
         const eventDate = dateFormatter.dateToNL(event.get("date"));
         this.reply = `Added event ${eventName} on ${eventDate}`;

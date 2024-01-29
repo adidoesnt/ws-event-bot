@@ -39,7 +39,7 @@ export class Bot extends WhatsApp {
         return true;
     }
 
-    protected async processMessage(msg: Message) {
+    async processMessage(msg: Message) {
         const {
             from: chatId,
             body,
@@ -47,8 +47,8 @@ export class Bot extends WhatsApp {
             author,
             notifyName,
         } = msg as Message & { notifyName: string };
-        if (!this.validateChatId(chatId)) return;
-        this.logger.debug("received whatsapp message", msg);
+        // if (!this.validateChatId(chatId)) return;
+        // this.logger.debug("received whatsapp message", msg);
         const tokens = body.split(" ");
         const command = tokens.shift();
         const msgId = id._serialized;
@@ -91,11 +91,6 @@ export class Bot extends WhatsApp {
         } else {
             return;
         }
-    }
-
-    private getDate(date: string) {
-        const year = new Date().getFullYear();
-        return parseDate(`${date} ${year} ${this.format} ${this.timezone}`);
     }
 
     private async addEvent(tokens: string[]) {

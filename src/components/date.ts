@@ -15,7 +15,8 @@ export class DateFormatter {
         return DateFormatter.instance;
     }
 
-    public dateToNL(date: Date): string {
+    public dateToNL(dateString: string): string {
+        const date = new Date(dateString);
         return format(date, this.format);
     }
 
