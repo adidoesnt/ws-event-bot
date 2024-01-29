@@ -6,6 +6,7 @@ export type Command =
     | "/attendEvent"
     | "/flakeEvent"
     | "/deleteEvent"
+    | "/updateEvent"
     | "/viewEvent";
 
 export abstract class Handler {

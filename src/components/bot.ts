@@ -7,6 +7,7 @@ import { AddEvent } from "./handlers/addEvent";
 import { AttendEvent } from "./handlers/attendEvent";
 import { FlakeEvent } from "./handlers/flakeEvent";
 import { DeleteEvent } from "./handlers/deleteEvent";
+import { UpdateEvent } from "./handlers/updateEvent";
 
 const { BOT_CHAT_ID, TIMEZONE, FORMAT } = process.env;
 
@@ -134,8 +135,9 @@ export class Bot extends WhatsApp {
         return await handler.execute();
     }
 
-    private updateEvent(tokens: string[]) {
-        return "";
+    private async updateEvent(tokens: string[]) {
+        const handler = new UpdateEvent(tokens);
+        return await handler.execute();
     }
 
     private async viewEvent(tokens: string[]) {
