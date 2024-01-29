@@ -4,6 +4,8 @@ export type Event = typeof event;
 
 export const event = {
     name: {
+        primary: true,
+        unique: true,
         type: "string" as PropertyType,
         required: true,
     } as NodeProperty,

@@ -4,6 +4,7 @@ import { EventService } from "./event/service";
 import { Message } from "whatsapp-web.js";
 import { parseDate } from "chrono-node";
 import { AddEvent } from "./handlers/addEvent";
+import { AttendEvent } from "./handlers/attendEvent";
 
 const { BOT_CHAT_ID, TIMEZONE, FORMAT } = process.env;
 
@@ -45,8 +46,8 @@ export class Bot extends WhatsApp {
             body,
             id,
             author,
-            notifyName,
-        } = msg as Message & { notifyName: string };
+            _data: { notifyName },
+        } = msg as Message & { _data: { notifyName: string } };
         // if (!this.validateChatId(chatId)) return;
         // this.logger.debug("received whatsapp message", msg);
         const tokens = body.split(" ");
@@ -103,7 +104,10 @@ export class Bot extends WhatsApp {
         author: string | undefined,
         notifyName: string | undefined,
     ) {
-        return "";
+        if (author) tokens.push(author);
+        if (notifyName) tokens.push(notifyName);
+        const handler = new AttendEvent(tokens);
+        return await handler.execute();
     }
 
     private async deleteEvent(tokens: string[]) {
