@@ -1,21 +1,16 @@
-import { UserService } from "components/user/service";
 import { WhatsApp } from "./whatsapp";
-import { EventService } from "./event/service";
 import { Message } from "whatsapp-web.js";
-import { parseDate } from "chrono-node";
 import { AddEvent } from "./handlers/addEvent";
 import { AttendEvent } from "./handlers/attendEvent";
 import { FlakeEvent } from "./handlers/flakeEvent";
 import { DeleteEvent } from "./handlers/deleteEvent";
 import { UpdateEvent } from "./handlers/updateEvent";
 
-const { BOT_CHAT_ID, TIMEZONE, FORMAT } = process.env;
+const { BOT_CHAT_ID } = process.env;
 
 export class Bot extends WhatsApp {
     private static instance: Bot;
     private chatId: string;
-    private format: string = FORMAT ?? "DD-MM-YYYY";
-    private timezone: string = TIMEZONE ?? "GMT+8";
 
     private constructor() {
         super();
