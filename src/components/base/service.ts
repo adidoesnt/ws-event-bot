@@ -1,4 +1,3 @@
-import { Model } from 'neode';
 import { Respository } from './repository';
 
 export abstract class Service<T> {

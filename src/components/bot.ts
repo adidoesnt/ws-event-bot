@@ -3,22 +3,19 @@ import { WhatsApp } from "./whatsapp";
 import { EventService } from "./event/service";
 import { Message } from "whatsapp-web.js";
 import { parseDate } from "chrono-node";
+import { AddEvent } from "./handlers/addEvent";
 
 const { BOT_CHAT_ID, TIMEZONE, FORMAT } = process.env;
 
 export class Bot extends WhatsApp {
     private static instance: Bot;
     private chatId: string;
-    private userService: UserService;
-    private eventService: EventService;
     private format: string = FORMAT ?? "DD-MM-YYYY";
     private timezone: string = TIMEZONE ?? "GMT+8";
 
     private constructor() {
         super();
         this.chatId = `${BOT_CHAT_ID}`;
-        this.userService = new UserService();
-        this.eventService = new EventService();
     }
 
     static getInstance() {
@@ -102,7 +99,8 @@ export class Bot extends WhatsApp {
     }
 
     private async addEvent(tokens: string[]) {
-        return "";
+        const handler = new AddEvent(tokens);
+        return await handler.execute();
     }
 
     private async attendEvent(

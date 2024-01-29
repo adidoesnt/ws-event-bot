@@ -19,5 +19,6 @@ export const event = {
         cascade: "detach",
         properties: {},
         eager: true,
-    } as NodeProperty,
+        required: false,
+    } as NodeProperty | undefined,
 };
