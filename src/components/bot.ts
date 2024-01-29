@@ -6,6 +6,7 @@ import { parseDate } from "chrono-node";
 import { AddEvent } from "./handlers/addEvent";
 import { AttendEvent } from "./handlers/attendEvent";
 import { FlakeEvent } from "./handlers/flakeEvent";
+import { DeleteEvent } from "./handlers/deleteEvent";
 
 const { BOT_CHAT_ID, TIMEZONE, FORMAT } = process.env;
 
@@ -129,7 +130,8 @@ export class Bot extends WhatsApp {
     }
 
     private async deleteEvent(tokens: string[]) {
-        return "";
+        const handler = new DeleteEvent(tokens);
+        return await handler.execute();
     }
 
     private updateEvent(tokens: string[]) {
