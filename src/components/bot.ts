@@ -82,6 +82,9 @@ export class Bot extends WhatsApp {
             case "/deleteEvent":
                 reply = await this.deleteEvent(tokens);
                 break;
+            case "/updateEvent":
+                reply = await this.updateEvent(tokens);
+                break;
             case "/viewEvent":
                 reply = await this.viewEvent(tokens);
                 break;
@@ -126,6 +129,10 @@ export class Bot extends WhatsApp {
     }
 
     private async deleteEvent(tokens: string[]) {
+        return "";
+    }
+
+    private updateEvent(tokens: string[]) {
         return "";
     }
 
