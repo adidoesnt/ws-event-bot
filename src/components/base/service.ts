@@ -27,7 +27,7 @@ export abstract class Service<T> {
         }
     }
 
-    async deleteOne(id: number) {
+    async deleteOne(id: string | number) {
         try {
             return await this.repository.deleteOne(id);
         } catch (error) {

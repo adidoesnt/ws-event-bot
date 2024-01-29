@@ -34,7 +34,7 @@ export abstract class Respository<T> {
         }
     }
 
-    async deleteOne(id: number) {
+    async deleteOne(id: number | string) {
         try {
             const node = await this.findOne(id);
             return await node?.delete();
