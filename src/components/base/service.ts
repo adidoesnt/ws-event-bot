@@ -1,10 +1,10 @@
 import { Model } from 'neode';
 import { Respository } from './repository';
 
-export abstract class Service<T extends Model<unknown>> {
+export abstract class Service<T> {
     abstract readonly repository: Respository<T>;
 
-    async create(data: Record<string, unknown>) {
+    async create(data: T) {
         try {
             return await this.repository.create(data);
         } catch (error) {
@@ -44,7 +44,7 @@ export abstract class Service<T extends Model<unknown>> {
         }
     }
 
-    async update(id: number | string, data: Record<string, unknown>) {
+    async update(id: number | string, data: T) {
         try {
             return await this.repository.update(id, data);
         } catch (error) {

@@ -2,13 +2,9 @@ import { UserService } from "components/user/service";
 import { WhatsApp } from "./whatsapp";
 import { EventService } from "./event/service";
 import { Message } from "whatsapp-web.js";
-import { Event as EventModel } from "models";
-import { Node } from "neode";
 import { parseDate } from "chrono-node";
 
 const { BOT_CHAT_ID, TIMEZONE, FORMAT } = process.env;
-
-type EventProps = keyof (typeof EventModel)["properties"];
 
 export class Bot extends WhatsApp {
     private static instance: Bot;
@@ -106,20 +102,7 @@ export class Bot extends WhatsApp {
     }
 
     private async addEvent(tokens: string[]) {
-        const name = tokens.shift();
-        const date = tokens.join(" ");
-        if (!name || !date) {
-            return "Event name and date are required\nExample: /addEvent <name> <date and time in natural language>";
-        }
-        const parsedDate = this.getDate(date);
-        const event = await this.eventService.create({
-            name,
-            date: parsedDate?.getDate(),
-            time: parsedDate?.getTime(),
-        });
-        const { properties } = event;
-        const { name: eventName } = properties as EventProps;
-        return `Event ${eventName} created`;
+        return "";
     }
 
     private async attendEvent(
@@ -127,90 +110,14 @@ export class Bot extends WhatsApp {
         author: string | undefined,
         notifyName: string | undefined,
     ) {
-        if (!author || !notifyName) {
-            this.logger.error("author and notify name are required");
-            return "";
-        } else {
-            const [id] = tokens;
-            if (!id) {
-                return "Event ID is required\nExample: /attendEvent <id>";
-            }
-            let user = await this.userService.findOne(author);
-            if (!user) {
-                user = await this.userService.create({
-                    id: author,
-                    name: notifyName,
-                });
-            }
-            const event = await this.eventService.findOne(parseInt(id) - 1);
-            if (!event) {
-                return `Event with ID ${id} not found`;
-            }
-            await event.relateTo(user, "attendedBy");
-            const { properties: eventProps } = event;
-            const { name: eventName } = eventProps as EventProps;
-            return `You will be attending ${eventName}`;
-        }
+        return "";
     }
 
     private async deleteEvent(tokens: string[]) {
-        const [id] = tokens;
-        if (!id) {
-            return "Event ID is required\nExample: /deleteEvent <id>";
-        }
-        const event = await this.eventService.deleteOne(parseInt(id) - 1);
-        const { properties } = event;
-        const { name } = properties as EventProps;
-        return `Event ${name} created`;
+        return "";
     }
 
     private async viewEvent(tokens: string[]) {
-        const [id] = tokens;
-        if (id) {
-            const event = await this.eventService.findOne(parseInt(id) - 1);
-            const { properties } = event;
-            const { name, date, time } = properties as EventProps;
-            return `${name} ${date} ${time}`;
-        } else {
-            const events = await this.eventService.findAll();
-            const eventArr: Node<unknown>[] = [];
-            let reply = "";
-            events.forEach((event: Node<unknown>) => {
-                eventArr.push(event);
-            });
-            eventArr
-                .sort((a: any, b: any) => {
-                    this.logger.debug("sorting events", a, b);
-                    const aProps = a._properties as Map<string, unknown>;
-                    const bProps = b._properties as Map<string, unknown>;
-                    const aDate = aProps.get("date") as Date;
-                    const bDate = bProps.get("date") as Date;
-                    const aTime = aProps.get("time") as Date;
-                    const bTime = bProps.get("time") as Date;
-                    const dateComparison = aDate
-                        .toISOString()
-                        .localeCompare(bDate.toISOString());
-                    if (dateComparison !== 0) {
-                        return dateComparison;
-                    }
-                    if (aTime && bTime) {
-                        return aTime
-                            .toISOString()
-                            .localeCompare(bTime.toISOString());
-                    }
-                    return 0;
-                })
-                .forEach((event: any, index: number) => {
-                    const properties = event._properties as Map<
-                        string,
-                        unknown
-                    >;
-                    const name = properties.get("name");
-                    const date = properties.get("date");
-                    const time = properties.get("time");
-                    reply += `${index + 1}. ${name} ${date} ${time}\n`;
-                });
-            return reply;
-        }
+        return "";
     }
 }

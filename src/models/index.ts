@@ -1,3 +1,2 @@
-export { schema } from "./schema";
-export { User } from "./user";
-export { Event } from "./event";
+export { user, type User } from "./user";
+export { event, type Event } from "./event";

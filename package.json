@@ -19,7 +19,6 @@
     "log4js": "^6.9.1",
     "neode": "^0.4.9",
     "puppeteer": "^21.9.0",
-    "qrcode-terminal": "^0.12.0",
-    "uuid": "^9.0.1"
+    "qrcode-terminal": "^0.12.0"
   }
 }

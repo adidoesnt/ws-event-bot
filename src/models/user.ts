@@ -1,21 +1,23 @@
-import { neode } from "components/database";
+import { NodeProperty, PropertyType } from "neode";
 
-export const User = neode.model("User", {
+export type User = typeof user;
+
+export const user = {
     id: {
         primary: true,
-        type: "string",
+        type: "string" as PropertyType,
         required: true,
-    },
+    } as NodeProperty,
     name: {
-        type: "string",
+        type: "string" as PropertyType,
         required: true,
-    },
+    } as NodeProperty,
     attendedBy: {
-        type: "relationship",
+        type: "relationship" as PropertyType,
         relationship: "ATTENDED_BY",
         direction: "out",
         target: "Event",
         cascade: "detach",
         properties: {},
-    },
-});
+    } as NodeProperty,
+};

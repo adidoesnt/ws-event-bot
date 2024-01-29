@@ -1,25 +1,12 @@
 import { Respository } from "components/base/repository";
-import { User } from "models/user";
+import { User, user } from "models";
+import { Model } from "neode";
 
-export class UserRepository extends Respository<typeof User> {
-    readonly model = User;
-    
-    async findOne(id: string) {
-        try {
-            return await this.model.find(id);
-        } catch (error) {
-            this.logger.error("error finding one model", error);
-            throw error;
-        }
-    }
+export class UserRepository extends Respository<User> {
+    readonly model: Model<User>;
 
-    async update(id: string, data: Record<string, unknown>) {
-        try {
-            const node = await this.findOne(id);
-            return await node?.update(data);
-        } catch (error) {
-            this.logger.error("error updating one model", error);
-            throw error;
-        }
+    constructor() {
+        super();
+        this.model = this.database.neode.model("User", user);
     }
 }

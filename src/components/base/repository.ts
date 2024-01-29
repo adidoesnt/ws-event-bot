@@ -1,11 +1,13 @@
+import { Database } from "components/database";
 import { Logger } from "components";
-import { Model } from "neode";
+import { Model, SchemaObject } from "neode";
 
-export abstract class Respository<T extends Model<unknown>> {
-    abstract readonly model: T;
+export abstract class Respository<T> {
+    abstract readonly model: Model<T>;
+    database: Database = Database.getInstance();
     logger = Logger.getLogger("repository");
 
-    async create(data: Record<string, unknown>) {
+    async create(data: T) {
         try {
             return await this.model.create(data);
         } catch (error) {
@@ -51,7 +53,7 @@ export abstract class Respository<T extends Model<unknown>> {
         }
     }
 
-    async update(id: number | string, data: Record<string, unknown>) {
+    async update(id: number | string, data: T) {
         try {
             const node = await this.findOne(id);
             return await node?.update(data);

@@ -1,32 +1,23 @@
-import { neode } from "components/database";
-import { v4 as uuidV4 } from "uuid";
+import { NodeProperty, PropertyType } from "neode";
 
-export const Event = neode.model("Event", {
-    id: {
-        type: "string",
-        primary: true,
-        required: true,
-        unique: true,
-        default: () => uuidV4(),
-    },
+export type Event = typeof event;
+
+export const event = {
     name: {
-        type: "string",
+        type: "string" as PropertyType,
         required: true,
-    },
+    } as NodeProperty,
     date: {
-        type: "date",
+        type: "datetime" as PropertyType,
         required: true,
-    },
-    time: {
-        type: "time",
-        required: false,
-    },
+    } as NodeProperty,
     attendedBy: {
-        type: "relationship",
+        type: "relationship" as PropertyType,
         relationship: "ATTENDED_BY",
-        direction: "in",
+        direction: "out",
         target: "User",
         cascade: "detach",
         properties: {},
-    },
-});
+        eager: true,
+    } as NodeProperty,
+};
