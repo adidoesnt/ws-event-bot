@@ -5,6 +5,7 @@ import { Message } from "whatsapp-web.js";
 import { parseDate } from "chrono-node";
 import { AddEvent } from "./handlers/addEvent";
 import { AttendEvent } from "./handlers/attendEvent";
+import { FlakeEvent } from "./handlers/flakeEvent";
 
 const { BOT_CHAT_ID, TIMEZONE, FORMAT } = process.env;
 
@@ -75,6 +76,9 @@ export class Bot extends WhatsApp {
             case "/attendEvent":
                 reply = await this.attendEvent(tokens, author, notifyName);
                 break;
+            case "/flakeEvent":
+                reply = await this.flakeEvent(tokens, author, notifyName);
+                break;
             case "/deleteEvent":
                 reply = await this.deleteEvent(tokens);
                 break;
@@ -107,6 +111,17 @@ export class Bot extends WhatsApp {
         if (author) tokens.push(author);
         if (notifyName) tokens.push(notifyName);
         const handler = new AttendEvent(tokens);
+        return await handler.execute();
+    }
+
+    private async flakeEvent(
+        tokens: string[],
+        author: string | undefined,
+        notifyName: string | undefined,
+    ) {
+        if (author) tokens.push(author);
+        if (notifyName) tokens.push(notifyName);
+        const handler = new FlakeEvent(tokens);
         return await handler.execute();
     }
 

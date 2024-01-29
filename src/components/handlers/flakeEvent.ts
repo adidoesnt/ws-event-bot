@@ -2,37 +2,30 @@ import { Logger } from "components";
 import { Handler } from "components/base/handler";
 import { EventService } from "components/event/service";
 import { UserService } from "components/user/service";
-import { NodeProperty } from "neode";
 
 const eventService = EventService.getInstance();
 const userService = UserService.getInstance();
 
-export class AttendEvent extends Handler {
-    logger = Logger.getLogger("attendEvent handler");
+export class FlakeEvent extends Handler {
+    logger = Logger.getLogger("flakeEvent handler");
 
     constructor(tokens: Array<string>) {
-        super("/attendEvent", tokens);
+        super("/flakeEvent", tokens);
     }
 
     async execute(): Promise<string> {
         const [name, authorId, authorName] = this.tokens;
         if (!name || !authorId || !authorName) {
-            this.reply = "usage: /attendEvent <name>";
+            this.reply = "usage: /flakeEvent <name>";
             this.logger.error(this.reply);
             return this.reply;
         }
         const event = await eventService.findOne(name);
-        let user = await userService.findOne(authorId);
-        if (!user) {
-            user = await userService.create({
-                id: authorId as NodeProperty,
-                name: authorName as NodeProperty,
-            });
-        }
-        await event.relateTo(user, "attendedBy");
+        const user = await userService.findOne(authorId);
+        await event.detachFrom(user);
         const userName = user.get("name");
         const eventName = event.get("name");
-        this.reply = `Added ${userName} to event ${eventName}`;
+        this.reply = `Removed ${userName} from event ${eventName}`;
         return this.reply;
     }
 }
