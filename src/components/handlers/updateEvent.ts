@@ -30,7 +30,7 @@ export class UpdateEvent extends Handler {
         } as any);
         const eventName = event.get("name");
         const eventDate = dateFormatter.dateToNL(event.get("date"));
-        this.reply = `Added event ${eventName} on ${eventDate}`;
+        this.reply = `Update event ${eventName} to be on ${eventDate}`;
         return this.reply;
     }
 }
