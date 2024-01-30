@@ -1,4 +1,4 @@
-import { NodeProperty, PropertyType } from "neode";
+import { NodeProperty, PropertyType, SchemaObject } from "neode";
 
 export type Event = typeof event;
 
@@ -23,4 +23,4 @@ export const event = {
         eager: true,
         required: false,
     } as NodeProperty | undefined,
-};
+} as SchemaObject;

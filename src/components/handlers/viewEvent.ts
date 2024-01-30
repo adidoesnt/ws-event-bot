@@ -2,6 +2,7 @@ import { Logger } from "components";
 import { Handler } from "components/base/handler";
 import { DateFormatter } from "components/date";
 import { EventService } from "components/event/service";
+import { Relationship } from "neode";
 
 const dateFormatter = DateFormatter.getInstance();
 const eventService = EventService.getInstance();
@@ -44,7 +45,7 @@ export class ViewEvent extends Handler {
                 const date: string = event.get("date");
                 const parsedDate = dateFormatter.dateToNL(date);
                 const attendees = event.get("attendedBy");
-                const eventString = `${index}. Event ${name} on ${parsedDate}\n`; 
+                const eventString = `${index}. Event ${name} on ${parsedDate}\n`;
                 this.reply += eventString;
             });
         return this.reply;
@@ -59,8 +60,8 @@ export class ViewEvent extends Handler {
             const name: string = event.get("name");
             const date: string = event.get("date");
             const parsedDate = dateFormatter.dateToNL(date);
-            const attendees = event.get("attendedBy");
-            // this.logger.debug({ attendees });
+            const attendees: Relationship = event.get("attendedBy");
+            console.log({ attendees: attendees.endNode() });
             this.reply = `Event ${name} on ${parsedDate}`;
         }
         return this.reply;
