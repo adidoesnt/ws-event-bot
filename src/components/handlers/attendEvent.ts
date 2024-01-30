@@ -9,10 +9,14 @@ const userService = UserService.getInstance();
 
 export class AttendEvent extends Handler {
     logger = Logger.getLogger("attendEvent handler");
-    authorId: string;
-    authorName: string;
+    authorId: string | undefined;
+    authorName: string | undefined;
 
-    constructor(tokens: Array<string>, authorId: string, authorName: string) {
+    constructor(
+        tokens: Array<string>,
+        authorId: string | undefined,
+        authorName: string | undefined,
+    ) {
         super("/attendEvent", tokens);
         this.authorId = authorId;
         this.authorName = authorName;
@@ -21,6 +25,7 @@ export class AttendEvent extends Handler {
     getArgs() {
         const args = [];
         const name = this.tokens.join(" ");
+        if (!this.authorId || !this.authorName) return [null, null, null];
         args.push(name, this.authorId, this.authorName);
         if (args.length !== 3) return [null, null, null];
         return args.map((arg) => arg.trim());

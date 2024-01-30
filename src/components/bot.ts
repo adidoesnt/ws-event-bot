@@ -109,9 +109,7 @@ export class Bot extends WhatsApp {
         author: string | undefined,
         notifyName: string | undefined,
     ) {
-        if (author) tokens.push(author);
-        if (notifyName) tokens.push(notifyName);
-        const handler = new AttendEvent(tokens);
+        const handler = new AttendEvent(tokens, author, notifyName);
         return await handler.execute();
     }
 
@@ -120,9 +118,7 @@ export class Bot extends WhatsApp {
         author: string | undefined,
         notifyName: string | undefined,
     ) {
-        if (author) tokens.push(author);
-        if (notifyName) tokens.push(notifyName);
-        const handler = new FlakeEvent(tokens);
+        const handler = new FlakeEvent(tokens, author, notifyName);
         return await handler.execute();
     }
 
