@@ -47,8 +47,8 @@ export class Bot extends WhatsApp {
             author,
             _data: { notifyName },
         } = msg as Message & { _data: { notifyName: string } };
-        // if (!this.validateChatId(chatId)) return;
-        // this.logger.debug("received whatsapp message", msg);
+        if (!this.validateChatId(chatId)) return;
+        this.logger.debug("received whatsapp message", msg);
         const tokens = body.split(" ");
         const command = tokens.shift();
         const msgId = id._serialized;

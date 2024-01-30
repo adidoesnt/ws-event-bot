@@ -2,7 +2,6 @@ import { Logger } from "components";
 import { Handler } from "components/base/handler";
 import { DateFormatter } from "components/date";
 import { EventService } from "components/event/service";
-import { Relationship } from "neode";
 
 const dateFormatter = DateFormatter.getInstance();
 const eventService = EventService.getInstance();
@@ -44,9 +43,10 @@ export class ViewEvent extends Handler {
                 const name: string = event.get("name");
                 const date: string = event.get("date");
                 const parsedDate = dateFormatter.dateToNL(date);
-                const attendees = event.get("attendedBy");
                 const eventString = `${index}. Event ${name} on ${parsedDate}\n`;
                 this.reply += eventString;
+                this.reply +=
+                    "\nTo view the attendees for an event, use /viewEvent <event name>\n";
             });
         return this.reply;
     }
@@ -60,10 +60,23 @@ export class ViewEvent extends Handler {
             const name: string = event.get("name");
             const date: string = event.get("date");
             const parsedDate = dateFormatter.dateToNL(date);
-            const attendees: Relationship = event.get("attendedBy");
-            console.log({ attendees: attendees.endNode() });
-            this.reply = `Event ${name} on ${parsedDate}`;
+            const attendees = await this.getAttendees(name);
+            this.reply = `Event ${name} on ${parsedDate}\nAttendees:\n${attendees}`;
         }
         return this.reply;
+    }
+
+    async getAttendees(name: string): Promise<string> {
+        const relationships = await eventService.findRelationships(name);
+        const attendeesString = relationships
+            .map((relationship: any, i: number) => {
+                const endNode = relationship.endNode;
+                const { properties } = endNode;
+                const index = i + 1;
+                const { name } = properties;
+                return `\t${index}. ${name}`;
+            })
+            .join("\n");
+        return attendeesString;
     }
 }

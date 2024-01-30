@@ -1,4 +1,4 @@
-import { NodeProperty, PropertyType, SchemaObject } from "neode";
+import { NodeProperty, PropertyType, RelationshipType, SchemaObject } from "neode";
 
 export type Event = typeof event;
 
