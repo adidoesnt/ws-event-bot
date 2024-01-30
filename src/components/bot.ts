@@ -5,6 +5,7 @@ import { AttendEvent } from "./handlers/attendEvent";
 import { FlakeEvent } from "./handlers/flakeEvent";
 import { DeleteEvent } from "./handlers/deleteEvent";
 import { UpdateEvent } from "./handlers/updateEvent";
+import { ViewEvent } from "./handlers/viewEvent";
 
 const { BOT_CHAT_ID } = process.env;
 
@@ -136,6 +137,7 @@ export class Bot extends WhatsApp {
     }
 
     private async viewEvent(tokens: string[]) {
-        return "";
+        const handler = new ViewEvent(tokens);
+        return await handler.execute();
     }
 }
