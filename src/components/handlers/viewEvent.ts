@@ -14,7 +14,7 @@ export class ViewEvent extends Handler {
     }
 
     async execute(): Promise<string> {
-        const name = this.tokens.shift();
+        const name = this.tokens.join(" ");
         if (!name) {
             this.reply = await this.getAllEvents();
         } else {

@@ -27,13 +27,13 @@ export class Bot extends WhatsApp {
 
     private validateChatId(chatId: string | number) {
         if (!chatId) {
-            this.logger.error("chatId is required");
+            this.logger.warn("chatId is required");
             return false;
         } else if (typeof chatId !== "string" && typeof chatId !== "number") {
-            this.logger.error("chatId must be a string or number");
+            this.logger.warn("chatId must be a string or number");
             return false;
         } else if (`${chatId}` !== this.chatId) {
-            this.logger.error("chatId does not match bot configuration");
+            this.logger.warn("chatId does not match bot configuration");
             return false;
         }
         return true;
