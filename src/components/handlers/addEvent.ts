@@ -14,12 +14,18 @@ export class AddEvent extends Handler {
         super("/addEvent", tokens);
     }
 
+    getArgs(): Array<string | null> {
+        const args = this.tokens.join(" ").split(",");
+        if(args.length !== 2) return [null, null]
+        return args.map((arg) => arg.trim());
+    }
+
     async execute(): Promise<string> {
-        const name = this.tokens.shift();
-        const date = this.tokens.join(" ");
+        const args = this.getArgs();
+        const [name, date] = args;
         if (!name || !date) {
             this.reply =
-                "usage: /addEvent <name> <date and time in natural language>";
+                "usage: /addEvent <name>, <date and time in natural language>";
             this.logger.error(this.reply);
             return this.reply;
         }
