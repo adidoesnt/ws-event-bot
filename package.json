@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "chrono-node": "^2.7.5",
+    "date-fns": "^3.3.1",
     "log4js": "^6.9.1",
     "neode": "^0.4.9",
     "puppeteer": "^21.9.0",
